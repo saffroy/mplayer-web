@@ -1,0 +1,10 @@
+click==6.7                # via flask
+flask==0.11.1
+ipython==2.4.1
+itsdangerous==0.24        # via flask
+jinja2==2.8               # via flask
+markupsafe==0.23          # via jinja2
+mplayer.py==0.7.2.post1
+python-dateutil==2.5.3
+six==1.13.0               # via python-dateutil
+werkzeug==0.11.15         # via flask
