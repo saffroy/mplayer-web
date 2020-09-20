@@ -55,6 +55,7 @@ def get_state(player):
         'volume': player.volume,
         'mute': player.mute,
         'time': player.time_pos,
+        'audio_track': player.switch_audio,
     }
 
 app = flask.Flask('mplayer-web')
@@ -158,3 +159,27 @@ def fwd():
 @pcommand
 def back():
     player.time_pos = max(0, player.time_pos-10)
+
+@app.route('/ffwd')
+@pcommand
+def ffwd():
+    player.time_pos += 60
+
+@app.route('/fback')
+@pcommand
+def fback():
+    player.time_pos = max(0, player.time_pos-60)
+
+@app.route('/audio_next')
+@pcommand
+def audio_next():
+    x = player.volume
+    player.switch_audio += 1
+    player.volume = x
+
+@app.route('/audio_prev')
+@pcommand
+def audio_prev():
+    x = player.volume
+    player.switch_audio -= 1
+    player.volume = x
