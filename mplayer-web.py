@@ -22,50 +22,49 @@ def all_files(dirs):
 
     return sorted(list(gen_files(dirs)))
 
-TOP_DIRS = ['/backup/tmp/The Good Place Season 3 Complete 720p AMZN WEBRip x264 [i_c]']
-ALL_FILES = all_files(TOP_DIRS)
+TOP_DIRS = ['/backup/tmp/']
+ALL_FILES = []
 FILE_INDEX = 0
 
-p = None
-filename = '/backup/tmp/The Good Place Season 3 Complete 720p AMZN WEBRip x264 [i_c]/The Good Place S03e01 Everything Is Bonzer!.mkv'
+player = None
 
 def init():
-    global p
+    global player
 
-    if p is not None:
-        p.quit()
-        p = None
+    if player is not None:
+        player.quit()
+        player = None
 
-    p = mplayer.Player()
+    player = mplayer.Player()
     filename = ALL_FILES[FILE_INDEX]
-    p.loadfile(filename)
+    player.loadfile(filename)
 
-    # p.pause()
+    player.fullscreen = True
+    player.sub_select(0)
+    player.osd(1)
+    player.volume = 5
+    player.time_pos = 0
 
-    p.fullscreen = True
-    p.sub_select(0)
-    p.osd(1)
-    p.volume = 5
-    p.time_pos = 0
-
-
-def get_state(p):
+def get_state(player):
     return {
         'now': datetime.datetime.now().isoformat(),
-        'fullscreen': p.fullscreen,
-        'sub': p.sub,
-        'osd': p.osdlevel,
-        'paused': p.paused,
-        'volume': p.volume,
-        'mute': p.mute,
-        'time': p.time_pos,
+        'fullscreen': player.fullscreen,
+        'sub': player.sub,
+        'osd': player.osdlevel,
+        'paused': player.paused,
+        'volume': player.volume,
+        'mute': player.mute,
+        'time': player.time_pos,
     }
 
 app = flask.Flask('mplayer-web')
 
 @app.route('/')
 def root():
-    if p is None:
+    if player is None:
+        global ALL_FILES
+        ALL_FILES = all_files(TOP_DIRS)
+
         page = flask.render_template(
             'browse.html',
             filenames=enumerate(map(os.path.basename, ALL_FILES)),
@@ -74,7 +73,7 @@ def root():
     else:
         page = flask.render_template(
             'play.html',
-            state=json.dumps(get_state(p)),
+            state=json.dumps(get_state(player)),
         )
     return page
 
@@ -95,11 +94,10 @@ def select():
 def pcommand(fun):
     @functools.wraps(fun)
     def real_fun(*args, **kwargs):
-        global p
-        if p is not None:
+        if player is not None:
             fun(*args, **kwargs)
-        if p is not None:
-            return flask.jsonify(get_state(p))
+        if player is not None:
+            return flask.jsonify(get_state(player))
         else:
             return flask.jsonify(dict())
     return real_fun
@@ -107,65 +105,56 @@ def pcommand(fun):
 @app.route('/pause')
 @pcommand
 def pause():
-    global p
-    p.pause()
+    player.pause()
 
 @app.route('/vol_inc')
 @pcommand
 def vol_inc():
-    global p
-    p.volume += 5
+    player.volume += 5
 
 @app.route('/vol_dec')
 @pcommand
 def vol_dec():
-    global p
-    p.volume = max(0, p.volume - 5)
+    player.volume = max(0, player.volume - 5)
 
 @app.route('/mute')
 @pcommand
 def mute():
-    global p
-    p.mute = not(p.mute)
+    player.mute = not(player.mute)
 
 @app.route('/osd')
 @pcommand
 def osd():
-    global p
-    p.osd()
+    player.osd()
 
 @app.route('/fullscreen')
 @pcommand
 def fullscreen():
-    global p
-    p.fullscreen = not(p.fullscreen)
+    player.fullscreen = not(player.fullscreen)
 
 @app.route('/stop')
 @pcommand
 def stop():
-    global p
-    p.quit()
-    p = None
+    global player
+    player.quit()
+    player = None
 
 @app.route('/start')
 def start():
     init()
-    return flask.jsonify(get_state(p))
+    return flask.jsonify(get_state(player))
 
 @app.route('/sub')
 @pcommand
 def sub():
-    global p
-    p.sub_select()
+    player.sub_select()
 
 @app.route('/fwd')
 @pcommand
 def fwd():
-    global p
-    p.time_pos += 10
+    player.time_pos += 10
 
 @app.route('/back')
 @pcommand
 def back():
-    global p
-    p.time_pos = max(0, p.time_pos-10)
+    player.time_pos = max(0, player.time_pos-10)
