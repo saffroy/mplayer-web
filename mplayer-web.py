@@ -88,6 +88,7 @@ def select():
         global FILE_INDEX
         FILE_INDEX = _idx
         init()
+        return flask.jsonify(get_state(player))
     except:
         raise werkzeug.exceptions.BadRequest(
             'Error: bad value for param "idx": "{}"'.format(idx))
