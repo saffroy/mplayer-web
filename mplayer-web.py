@@ -22,7 +22,7 @@ def all_files(dirs):
 
     return sorted(list(gen_files(dirs)))
 
-TOP_DIRS = ['/backup/tmp/']
+TOP_DIRS = ['/backup/tmp/', '/home/saffroy/pvr']
 ALL_FILES = []
 FILE_INDEX = 0
 
