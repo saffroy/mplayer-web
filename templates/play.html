@@ -1,27 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
     <script src="/static/play.js"></script>
   </head>
   <body>
     <div id="state">{{state}}</div>
     <p/>
-    <button onclick="action('pause')">Pause</button><p/>
-    <button onclick="action('vol_inc')">Vol+</button><p/>
-    <button onclick="action('vol_dec')">Vol-</button><p/>
-    <button onclick="action('mute')">Mute</button><p/>
-    <button onclick="action('osd')">OSD</button><p/>
-    <button onclick="action('fullscreen')">Fullscreen</button><p/>
-    <button onclick="action('stop')">Stop</button><p/>
-    <button onclick="action('start')">Start</button><p/>
-    <button onclick="action('sub')">Sub</button><p/>
-    <button onclick="action('fwd')">Forward</button><p/>
-    <button onclick="action('back')">Back</button><p/>
-    <button onclick="action('ffwd')">FastForward</button><p/>
-    <button onclick="action('fback')">FastBack</button><p/>
-    <button onclick="action('audio_next')">AudioNext</button><p/>
-    <button onclick="action('audio_prev')">AudioPrev</button><p/>
+
+    <div class="container">
+
+      <div class="btn-group d-flex" role="group">
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('fback')">&lt;&lt;&lt;&lt;</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('back')">&lt;&lt;</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('pause')">Pause</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('fwd')">&gt;&gt;</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('ffwd')">&gt;&gt;&gt;&gt;</button>
+      </div>
+
+      <div class="btn-group d-flex" role="group">
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('mute')">Mute</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('vol_dec')">Vol-</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('vol_inc')">Vol+</button>
+      </div>
+
+      <div class="btn-group d-flex" role="group">
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('sub')">Sub</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('audio_next')">AudioNext</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('audio_prev')">AudioPrev</button>
+      </div>
+
+      <div class="btn-group d-flex" role="group">
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('osd')">OSD</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('fullscreen')">Fullscreen</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('start')">Start</button>
+	<button type="button" class="btn btn-primary flex-fill border" onclick="action('stop')">Stop</button>
+      </div>
+
+    </div>
+
   </body>
 </html>
