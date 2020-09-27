@@ -9,7 +9,8 @@ import os
 import re
 import werkzeug.exceptions
 
-VIDEOS_RE = re.compile('.*\.(mkv|avi|mpg|mp4)$', flags=re.IGNORECASE)
+VIDEOS_RE = re.compile('.*\.(mkv|avi|mpg|mp4|iso)$',
+                       flags=re.IGNORECASE)
 
 def all_files(dirs):
 
@@ -35,9 +36,13 @@ def init():
         player.quit()
         player = None
 
-    player = mplayer.Player()
     filename = ALL_FILES[FILE_INDEX]
-    player.loadfile(filename)
+    if re.search('\.iso$', filename):
+        player = mplayer.Player(args=('-dvd-device', filename))
+        player.loadfile('dvd://')
+    else:
+        player = mplayer.Player()
+        player.loadfile(filename)
 
     player.fullscreen = True
     player.sub_select(0)
