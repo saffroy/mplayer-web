@@ -29,6 +29,15 @@ FILE_INDEX = 0
 
 player = None
 
+class PlayerWrapper(mplayer.Player):
+    def __init__(self, *args, **kwargs):
+        mpargs = kwargs.get('args', ())
+        mpargs += ('-msglevel', 'global=6')
+        mpargs += ('-v',) * 5
+        kwargs['args'] = mpargs
+
+        super(PlayerWrapper, self).__init__(*args, **kwargs)
+
 def init():
     global player
 
@@ -38,10 +47,10 @@ def init():
 
     filename = ALL_FILES[FILE_INDEX]
     if re.search('\.iso$', filename):
-        player = mplayer.Player(args=('-dvd-device', filename))
+        player = PlayerWrapper(args=('-dvd-device', filename))
         player.loadfile('dvd://')
     else:
-        player = mplayer.Player()
+        player = PlayerWrapper(args=('-utf8',))
         player.loadfile(filename)
 
     player.fullscreen = True
