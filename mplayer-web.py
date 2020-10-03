@@ -168,22 +168,22 @@ def sub():
 @app.route('/fwd')
 @pcommand
 def fwd():
-    player.time_pos += 10
+    player.seek(10)
 
 @app.route('/back')
 @pcommand
 def back():
-    player.time_pos = max(0, player.time_pos-10)
+    player.seek(-10)
 
 @app.route('/ffwd')
 @pcommand
 def ffwd():
-    player.time_pos += 60
+    player.seek(60)
 
 @app.route('/fback')
 @pcommand
 def fback():
-    player.time_pos = max(0, player.time_pos-60)
+    player.seek(-60)
 
 @app.route('/audio_next')
 @pcommand
