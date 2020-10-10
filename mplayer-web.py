@@ -46,12 +46,25 @@ def init():
         player = None
 
     filename = ALL_FILES[FILE_INDEX]
+    args = ()
     if re.search('\.iso$', filename):
-        player = PlayerWrapper(args=('-dvd-device', filename))
-        player.loadfile('dvd://')
+        args += ('-dvd-device', filename)
+        target = 'dvd://'
     else:
-        player = PlayerWrapper(args=('-utf8',))
-        player.loadfile(filename)
+        args += ('-utf8',)
+        target = filename
+
+    try:
+        suffix = filename.split('.')[-1]
+        base = filename.rstrip(suffix)
+        with open(base + 'delay') as f:
+            d = f.read().strip()
+            args += ('-subdelay', d)
+    except:
+        pass
+
+    player = PlayerWrapper(args=args)
+    player.loadfile(target)
 
     player.fullscreen = True
     player.sub_select(0)
