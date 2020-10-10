@@ -185,6 +185,16 @@ def ffwd():
 def fback():
     player.seek(-60)
 
+@app.route('/fffwd')
+@pcommand
+def fffwd():
+    player.seek(600)
+
+@app.route('/ffback')
+@pcommand
+def ffback():
+    player.seek(-600)
+
 @app.route('/audio_next')
 @pcommand
 def audio_next():
