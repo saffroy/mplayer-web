@@ -212,12 +212,22 @@ def ffback():
 @pcommand
 def audio_next():
     x = player.volume
-    player.switch_audio += 1
+    # track numbers aren't sequential, probe for the next
+    track = player.switch_audio
+    for t in range(track+1, track+10, 1):
+        player.switch_audio = t
+        if player.switch_audio == t:
+            break
     player.volume = x
 
 @app.route('/audio_prev')
 @pcommand
 def audio_prev():
     x = player.volume
-    player.switch_audio -= 1
+    # track numbers aren't sequential, probe for the next
+    track = player.switch_audio
+    for t in range(track-1, track-10, -1):
+        player.switch_audio = t
+        if player.switch_audio == t:
+            break
     player.volume = x
