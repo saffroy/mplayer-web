@@ -231,3 +231,11 @@ def audio_prev():
         if player.switch_audio == t:
             break
     player.volume = x
+
+@app.route('/next')
+@pcommand
+def next():
+    stop()
+    global FILE_INDEX
+    FILE_INDEX += 1
+    start()
