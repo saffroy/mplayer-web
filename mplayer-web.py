@@ -3,7 +3,6 @@
 import datetime
 import flask
 import functools
-import json
 import mplayer
 import os
 import re
@@ -73,8 +72,11 @@ def init():
     player.time_pos = 0
 
 def get_state(player):
+    if player is None:
+        return dict()
     return {
         'now': datetime.datetime.now().isoformat(),
+        'filename': player.filename,
         'fullscreen': player.fullscreen,
         'sub': player.sub,
         'osd': player.osdlevel,
@@ -101,7 +103,6 @@ def root():
     else:
         page = flask.render_template(
             'play.html',
-            state=json.dumps(get_state(player)),
         )
     return page
 
@@ -115,20 +116,21 @@ def select():
         global FILE_INDEX
         FILE_INDEX = _idx
         init()
-        return flask.jsonify(get_state(player))
+        return ''
     except:
         raise werkzeug.exceptions.BadRequest(
             'Error: bad value for param "idx": "{}"'.format(idx))
+
+@app.route('/state')
+def state():
+    return flask.jsonify(get_state(player))
 
 def pcommand(fun):
     @functools.wraps(fun)
     def real_fun(*args, **kwargs):
         if player is not None:
             fun(*args, **kwargs)
-        if player is not None:
-            return flask.jsonify(get_state(player))
-        else:
-            return flask.jsonify(dict())
+        return ''
     return real_fun
 
 @app.route('/pause')
@@ -169,9 +171,9 @@ def stop():
     player = None
 
 @app.route('/start')
+@pcommand
 def start():
     init()
-    return flask.jsonify(get_state(player))
 
 @app.route('/sub')
 @pcommand
@@ -238,4 +240,4 @@ def next():
     stop()
     global FILE_INDEX
     FILE_INDEX += 1
-    start()
+    init()

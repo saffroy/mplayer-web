@@ -1,5 +1,15 @@
 function reload() { document.location = "/" }
 
+function refresh_state() {
+    const request = new XMLHttpRequest();
+    request.open('GET', '/state');
+    request.onload = () => {
+        const response = request.responseText;
+        document.querySelector('#state').innerHTML = response;
+    };
+    request.send();
+}
+
 function action(act_name) {
     console.log("toggle " + act_name);
 
@@ -8,8 +18,7 @@ function action(act_name) {
     request.onload = () => {
 	if (act_name === 'stop')
 	    reload();
-        const response = request.responseText;
-        document.querySelector('#state').innerHTML = response;
+	refresh_state();
     };
     request.send();
 }
@@ -22,4 +31,12 @@ function chosen_file() {
     request.open('GET', `/select?idx=${idx}`);
     request.onload = reload;
     request.send();
+}
+
+function register_load() {
+    document.addEventListener('readystatechange', event => {
+	if (event.target.readyState === 'complete') {
+	    refresh_state();
+	}
+    });
 }
