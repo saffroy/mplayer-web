@@ -70,6 +70,7 @@ def init():
     player.osd(1)
     player.volume = 5
     player.time_pos = 0
+    player.osd_show_property_text(os.path.basename(filename), 3000)
 
 def get_state(player):
     if player is None:
@@ -136,6 +137,7 @@ def pcommand(fun):
 @app.route('/pause')
 @pcommand
 def pause():
+    player.osd_show_progression()
     player.pause()
 
 @app.route('/vol_inc')
