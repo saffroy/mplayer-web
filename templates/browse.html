@@ -13,7 +13,7 @@
 
       <select name="files" id="file-select" onchange="chosen_file()">
 	{% for idx, path in filenames %}
-	<option value="{{idx}}"{{"selected" if idx == selected else ""}}>{{path}}</option>
+	<option value="{{idx}}"{{" selected" if idx == selected else ""}}>{{path}}</option>
 	{% endfor %}
       </select>
 
