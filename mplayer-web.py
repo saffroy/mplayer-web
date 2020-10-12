@@ -212,28 +212,27 @@ def fffwd():
 def ffback():
     player.seek(-600)
 
+def probe_audio_tracks(track_nums):
+    # track numbers aren't sequential, probe for the next
+    for t in track_nums:
+        player.switch_audio = t
+        if player.switch_audio == t:
+            break
+
 @app.route('/audio_next')
 @pcommand
 def audio_next():
     x = player.volume
-    # track numbers aren't sequential, probe for the next
     track = player.switch_audio
-    for t in range(track+1, track+10, 1):
-        player.switch_audio = t
-        if player.switch_audio == t:
-            break
+    probe_audio_tracks(range(track+1, track+10, 1))
     player.volume = x
 
 @app.route('/audio_prev')
 @pcommand
 def audio_prev():
     x = player.volume
-    # track numbers aren't sequential, probe for the next
     track = player.switch_audio
-    for t in range(track-1, track-10, -1):
-        player.switch_audio = t
-        if player.switch_audio == t:
-            break
+    probe_audio_tracks(range(track-1, track-10, -1))
     player.volume = x
 
 @app.route('/next')
