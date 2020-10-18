@@ -143,12 +143,16 @@ def pause():
 @app.route('/vol_inc')
 @pcommand
 def vol_inc():
-    player.volume += 5
+    v = round(player.volume + 5)
+    player.volume = v
+    player.osd_show_property_text('Vol: {}'.format(v), 1000)
 
 @app.route('/vol_dec')
 @pcommand
 def vol_dec():
-    player.volume = max(0, player.volume - 5)
+    v = round(max(0, player.volume - 5))
+    player.volume = v
+    player.osd_show_property_text('Vol: {}'.format(v), 1000)
 
 @app.route('/mute')
 @pcommand
