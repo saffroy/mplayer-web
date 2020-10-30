@@ -94,11 +94,14 @@ app = flask.Flask('mplayer-web')
 def root():
     if player is None:
         global ALL_FILES
-        ALL_FILES = all_files(TOP_DIRS)
+        files = all_files(TOP_DIRS)
+        ALL_FILES = ['dvd://'] + files
 
+        filenames = enumerate(['DVD'] +
+                              list(map(os.path.basename, files)))
         page = flask.render_template(
             'browse.html',
-            filenames=enumerate(map(os.path.basename, ALL_FILES)),
+            filenames=filenames,
             selected=FILE_INDEX,
         )
     else:
