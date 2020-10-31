@@ -8,21 +8,31 @@ import os
 import re
 import werkzeug.exceptions
 
-VIDEOS_RE = re.compile('.*\.(mkv|avi|mpg|mp4|iso)$',
+VIDEOS_RE = re.compile('^[^[].*\.(mkv|avi|mpg|mp4|iso)$',
                        flags=re.IGNORECASE)
 
 def all_files(dirs):
 
     def gen_files(dirs):
-        for topdir in dirs:
-            for dirname, subdirs, filenames in os.walk(topdir):
-                for filename in filenames:
-                    if VIDEOS_RE.match(filename):
-                        yield os.path.join(dirname, filename)
+        for topdir, recurse in dirs:
+            if recurse:
+                for dirname, subdirs, filenames in os.walk(topdir):
+                    for filename in filenames:
+                        yield (dirname, filename)
+            else:
+                for entry in os.listdir(topdir):
+                    yield (topdir, entry)
 
-    return sorted(list(gen_files(dirs)))
+    return sorted(list(os.path.join(dirname, filename)
+                       for dirname, filename in gen_files(dirs)
+                       if VIDEOS_RE.match(filename)))
 
-TOP_DIRS = ['/backup/tmp/', '/home/saffroy/pvr']
+TOP_DIRS = [
+    # topdir, recurse
+    ('/backup/tmp/', True),
+    ('/home/saffroy/pvr/', False),
+]
+
 ALL_FILES = []
 FILE_INDEX = 0
 
