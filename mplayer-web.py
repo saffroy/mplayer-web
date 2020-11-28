@@ -44,6 +44,7 @@ class PlayerWrapper(mplayer.Player):
         mpargs += ('-msglevel', 'global=6')
         mpargs += ('-v',) * 5
         kwargs['args'] = mpargs
+        self.pw_delay = 0
 
         super(PlayerWrapper, self).__init__(*args, **kwargs)
 
@@ -96,6 +97,7 @@ def get_state(player):
         'mute': player.mute,
         'time': player.time_pos,
         'audio_track': player.switch_audio,
+        'sub_delay': player.sub_delay,
     }
 
 app = flask.Flask('mplayer-web')
@@ -259,3 +261,17 @@ def next():
     global FILE_INDEX
     FILE_INDEX += 1
     init()
+
+@app.route('/sub_delay_down')
+@pcommand
+def sub_delay_down():
+    player.sub_delay -= 0.3
+    player.pw_delay -= 300
+    player.osd_show_property_text('Sub delay: {}'.format(player.pw_delay), 1000)
+
+@app.route('/sub_delay_up')
+@pcommand
+def sub_delay_up():
+    player.sub_delay += 0.3
+    player.pw_delay += 300
+    player.osd_show_property_text('Sub delay: {}'.format(player.pw_delay), 1000)
