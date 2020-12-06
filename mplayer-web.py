@@ -13,19 +13,20 @@ VIDEOS_RE = re.compile('^[^[].*\.(mkv|avi|mpg|mp4|iso)$',
 
 def all_files(dirs):
 
-    def gen_files(dirs):
-        for topdir, recurse in dirs:
-            if recurse:
-                for dirname, subdirs, filenames in os.walk(topdir):
-                    for filename in filenames:
-                        yield (dirname, filename)
-            else:
-                for entry in os.listdir(topdir):
-                    yield (topdir, entry)
+    def gen_files(topdir, recurse):
+        if recurse:
+            for dirname, subdirs, filenames in os.walk(topdir):
+                for filename in filenames:
+                    yield (dirname, filename)
+        else:
+            for entry in os.listdir(topdir):
+                yield (topdir, entry)
 
-    return sorted(list(os.path.join(dirname, filename)
-                       for dirname, filename in gen_files(dirs)
-                       if VIDEOS_RE.match(filename)))
+    return list(os.path.join(dirname, filename)
+                for topdir, recurse in dirs
+                for dirname, filename in sorted(gen_files(topdir, recurse),
+                                                key=lambda x: x[1])
+                if VIDEOS_RE.match(filename))
 
 TOP_DIRS = [
     # topdir, recurse
