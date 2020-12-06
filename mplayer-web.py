@@ -32,6 +32,7 @@ TOP_DIRS = [
     # topdir, recurse
     ('/backup/tmp/', True),
     ('/home/saffroy/pvr/', False),
+    ('/backup/ext/tmp/PnR/', True),
 ]
 
 ALL_FILES = []
