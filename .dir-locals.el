@@ -3,5 +3,5 @@
 
 ((python-mode
   (python-shell-virtualenv-root . "venv3")
-  (python-shell-interpreter . "ipython3")))
+  (python-shell-interpreter . "python3")))
 
