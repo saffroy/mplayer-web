@@ -24,15 +24,14 @@ def all_files(dirs):
 
     return list(os.path.join(dirname, filename)
                 for topdir, recurse in dirs
-                for dirname, filename in sorted(gen_files(topdir, recurse),
-                                                key=lambda x: x[1])
+                for dirname, filename in sorted(gen_files(topdir, recurse))
                 if VIDEOS_RE.match(filename))
 
 TOP_DIRS = [
     # topdir, recurse
-    ('/backup/tmp/', True),
     ('/home/saffroy/pvr/', False),
-    ('/backup/ext/tmp/PnR/', True),
+    ('/backup/ext/films/', False),
+    ('/backup/ext/films/series/', True),
 ]
 
 ALL_FILES = []
