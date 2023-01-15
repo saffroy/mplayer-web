@@ -180,11 +180,6 @@ def mute():
 def osd():
     player.osd()
 
-@app.route('/fullscreen')
-@pcommand
-def fullscreen():
-    player.fullscreen = not(player.fullscreen)
-
 @app.route('/stop')
 @pcommand
 def stop():
@@ -196,6 +191,11 @@ def stop():
 @pcommand
 def start():
     init()
+
+@app.route('/subp')
+@pcommand
+def subp():
+    player.sub_select(-2)
 
 @app.route('/sub')
 @pcommand
