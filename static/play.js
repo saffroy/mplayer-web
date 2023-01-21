@@ -1,8 +1,8 @@
-function reload() { document.location = "/" }
+function reload() { document.location = "" }
 
 function refresh_state() {
     const request = new XMLHttpRequest();
-    request.open('GET', '/state');
+    request.open('GET', 'state');
     request.onload = () => {
         const response = request.responseText;
         document.querySelector('#state').innerHTML = response;
@@ -14,7 +14,7 @@ function action(act_name) {
     console.log("toggle " + act_name);
 
     const request = new XMLHttpRequest();
-    request.open('GET', `/${act_name}`);
+    request.open('GET', `${act_name}`);
     request.onload = () => {
 	if (act_name === 'stop')
 	    reload();
@@ -28,7 +28,7 @@ function chosen_file() {
     console.log("chose " + idx);
 
     const request = new XMLHttpRequest();
-    request.open('GET', `/select?idx=${idx}`);
+    request.open('GET', `select?idx=${idx}`);
     request.onload = reload;
     request.send();
 }
