@@ -2,6 +2,6 @@
 ;;; For more information see (info "(emacs) Directory Variables")
 
 ((python-mode
-  (python-shell-virtualenv-root . "venv3")
+  (eval . (setq-local python-shell-virtualenv-root (concat default-directory "venv3")))
   (python-shell-interpreter . "python3")))
 
