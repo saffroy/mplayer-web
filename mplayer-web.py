@@ -146,6 +146,14 @@ def root():
         )
     return page
 
+@app.route('/names')
+def names():
+    FILE_TABLE.refresh()
+    return flask.jsonify(dict(
+        names=FILE_TABLE.get_names(),
+        selected=FILE_TABLE.selected_idx,
+    ))
+
 @app.route('/select')
 def select():
     idx = flask.request.args.get('idx', '0')
