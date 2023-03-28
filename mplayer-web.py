@@ -34,8 +34,32 @@ TOP_DIRS = [
     ('/backup/ext/films/series/', True),
 ]
 
-ALL_FILES = []
-FILE_INDEX = 0
+class FileTable():
+    def __init__(self):
+        self.table = [('DVD', 'dvd://')] # list of (pretty name, real path)
+        self.selected_idx = 0
+        self.refresh()
+
+    def select(self, idx):
+        self.selected_idx = min(idx, len(self.table) - 1)
+
+    def select_next(self):
+        self.select(self.selected_idx+1)
+
+    def refresh(self):
+        files = all_files(TOP_DIRS)
+        self.table = [ self.table[0] ] + [
+            (os.path.basename(f), f) for f in files
+        ]
+        self.select(self.selected_idx)
+
+    def get_selected_path(self):
+        return self.table[self.selected_idx][1]
+
+    def get_names(self):
+        return [ e[0] for e in self.table ]
+
+FILE_TABLE = FileTable()
 
 player = None
 
@@ -56,7 +80,7 @@ def init():
         player.quit()
         player = None
 
-    filename = ALL_FILES[FILE_INDEX]
+    filename = FILE_TABLE.get_selected_path()
     args = ()
     if re.search('\.iso$', filename):
         args += ('-dvd-device', filename)
@@ -106,16 +130,11 @@ app = flask.Flask('mplayer-web')
 @app.route('/')
 def root():
     if player is None:
-        global ALL_FILES
-        files = all_files(TOP_DIRS)
-        ALL_FILES = ['dvd://'] + files
-
-        filenames = enumerate(['DVD'] +
-                              list(map(os.path.basename, files)))
+        FILE_TABLE.refresh()
         page = flask.render_template(
             'browse.html',
-            filenames=filenames,
-            selected=FILE_INDEX,
+            filenames=enumerate(FILE_TABLE.get_names()),
+            selected=FILE_TABLE.selected_idx,
         )
     else:
         page = flask.render_template(
@@ -128,10 +147,7 @@ def select():
     idx = flask.request.args.get('idx', '0')
     try:
         _idx = int(idx)
-        fname = ALL_FILES[_idx]
-
-        global FILE_INDEX
-        FILE_INDEX = _idx
+        FILE_TABLE.select(_idx)
         init()
         return ''
     except:
@@ -259,8 +275,7 @@ def audio_prev():
 @pcommand
 def next():
     stop()
-    global FILE_INDEX
-    FILE_INDEX += 1
+    FILE_TABLE.select_next()
     init()
 
 @app.route('/sub_delay_down')
