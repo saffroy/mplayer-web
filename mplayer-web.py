@@ -73,12 +73,8 @@ class PlayerWrapper(mplayer.Player):
 
         super(PlayerWrapper, self).__init__(*args, **kwargs)
 
-def init():
-    global player
-
-    if player is not None:
-        player.quit()
-        player = None
+def player_init():
+    player_stop()
 
     filename = FILE_TABLE.get_selected_path()
     args = ()
@@ -98,6 +94,8 @@ def init():
     except:
         pass
 
+    global player
+
     player = PlayerWrapper(args=args)
     player.loadfile(target)
 
@@ -108,7 +106,13 @@ def init():
     player.time_pos = 0
     player.osd_show_property_text(os.path.basename(filename), 3000)
 
-def get_state(player):
+def player_stop():
+    global player
+    if player is not None:
+        player.quit()
+        player = None
+
+def player_get_state():
     if player is None:
         return dict()
     return {
@@ -148,7 +152,7 @@ def select():
     try:
         _idx = int(idx)
         FILE_TABLE.select(_idx)
-        init()
+        player_init()
         return ''
     except:
         raise werkzeug.exceptions.BadRequest(
@@ -156,7 +160,7 @@ def select():
 
 @app.route('/state')
 def state():
-    return flask.jsonify(get_state(player))
+    return flask.jsonify(player_get_state())
 
 def pcommand(fun):
     @functools.wraps(fun)
@@ -199,14 +203,12 @@ def osd():
 @app.route('/stop')
 @pcommand
 def stop():
-    global player
-    player.quit()
-    player = None
+    player_stop()
 
 @app.route('/start')
 @pcommand
 def start():
-    init()
+    player_init()
 
 @app.route('/subp')
 @pcommand
@@ -274,9 +276,9 @@ def audio_prev():
 @app.route('/next')
 @pcommand
 def next():
-    stop()
+    player_stop()
     FILE_TABLE.select_next()
-    init()
+    player_init()
 
 @app.route('/sub_delay_down')
 @pcommand
