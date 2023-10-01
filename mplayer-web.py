@@ -29,7 +29,7 @@ def all_files(dirs):
 
 TOP_DIRS = [
     # topdir, recurse
-    ('/home/saffroy/pvr/', False),
+    ('/backup/ext/pvr/', False),
     ('/backup/ext/films/', False),
     ('/backup/ext/films/series/', True),
 ]
