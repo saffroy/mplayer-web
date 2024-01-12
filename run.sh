@@ -10,4 +10,4 @@ export DISPLAY=${DISPLAY:-:0}
 LC_ALL=C.UTF-8 LANG=C.UTF-8 \
       FLASK_DEBUG=0 \
       FLASK_APP=mplayer-web.py \
-      exec flask run --port 8081 "$@"
+      exec flask run --port 8081 --without-threads "$@"
