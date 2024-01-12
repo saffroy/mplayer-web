@@ -1,5 +1,20 @@
 function reload() { document.location = "" }
 
+var actions_in_progress = 0;
+
+function action_started() {
+    actions_in_progress++;
+    if (actions_in_progress === 1)
+        document.body.style.background = "darkgray"
+    navigator.vibrate(100);
+}
+
+function action_completed() {
+    actions_in_progress--;
+    if (actions_in_progress === 0)
+        document.body.style.background = "white"
+}
+
 function refresh_state() {
     const request = new XMLHttpRequest();
     request.open('GET', 'state');
@@ -12,10 +27,12 @@ function refresh_state() {
 
 function action(act_name) {
     console.log("toggle " + act_name);
+    action_started();
 
     const request = new XMLHttpRequest();
     request.open('GET', `${act_name}`);
     request.onload = () => {
+        action_completed()
 	if (act_name === 'stop')
 	    reload();
 	refresh_state();
