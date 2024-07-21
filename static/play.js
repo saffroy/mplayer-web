@@ -6,7 +6,7 @@ function action_started() {
     actions_in_progress++;
     if (actions_in_progress === 1)
         document.body.style.background = "darkgray"
-    navigator.vibrate(100);
+    navigator.vibrate && navigator.vibrate(100);
 }
 
 function action_completed() {
