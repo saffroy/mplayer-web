@@ -8,7 +8,7 @@ import os
 import re
 import werkzeug.exceptions
 
-VIDEOS_RE = re.compile('^[^[].*\.(mkv|avi|mpg|mpeg|mp4|iso)$',
+VIDEOS_RE = re.compile('^[^[].*\.(mkv|avi|mpg|mpeg|mp4|webm|iso)$',
                        flags=re.IGNORECASE)
 
 def all_files(dirs):
