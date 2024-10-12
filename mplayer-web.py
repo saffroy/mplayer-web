@@ -32,6 +32,7 @@ TOP_DIRS = [
     ('/backup/ext/pvr/', False),
     ('/backup/ext/films/', False),
     ('/backup/ext/films/series/', True),
+    ('/backup/ext/films/youtube/', False),
 ]
 
 class FileTable():
